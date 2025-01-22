@@ -1,0 +1,5 @@
+task.delay(60, function()
+    if not game.Players.LocalPlayer then
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
+end)

@@ -1,4 +1,7 @@
-repeat task.wait(1) until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+
 local HttpService = game:GetService("HttpService")
 local Request = (syn and syn.request) or request or (http and http.request) or http_request
 local username = game.Players.LocalPlayer.Name

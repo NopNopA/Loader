@@ -58,6 +58,7 @@ local function updateStatus()
 end
 
 local Round = 0
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Fix"))()
 while true do
     globalFunc = checkForError()
     print("Disconnected : ", globalFunc)

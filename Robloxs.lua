@@ -23,7 +23,7 @@ local function checkForError()
                 local errorMessage = game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage.Text
                 local errorCode = tonumber(errorMessage:split("\n")[2]:match("%d+"))
 
-                if errorCode ~= 772 and errorCode ~= 773 then
+                if errorCode then
                     globalFunc = true
                 end
             end)

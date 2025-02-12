@@ -83,6 +83,7 @@ while true do
         updateStatus()
     end
     if IsGetKick then
+        wait(20)
         setOffline()
     end
     Round = Round + 1

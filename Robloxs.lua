@@ -26,6 +26,28 @@ local function checkForError()
     return IsGetKick
 end
 
+local function setOffline()
+    local url = "http://103.216.158.53:1471/offline"
+    local username = game.Players.LocalPlayer.Name
+    local data = HttpService:JSONEncode({username = username})
+
+    local requestData = {
+        Url = url,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = data
+    }
+
+    local success, response = pcall(function()
+        Request(requestData)  
+    end)
+    if not success then
+        warn("Request failed: ", response)
+    end
+end
+
 local function updateStatus()
     local url = "http://103.216.158.53:1471/"
     local username = game.Players.LocalPlayer.Name
@@ -54,11 +76,14 @@ end
 local Round = 0
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Fix"))()
 while true do
-    globalFunc = checkForError()
-    print("Disconnected : ", globalFunc)
+    IsGetKick = checkForError()
+    print("Disconnected : ", IsGetKick)
     print("API runs at : ", Round)
-    if not globalFunc then
+    if not IsGetKick then
         updateStatus()
+    end
+    if IsGetKick then
+        setOffline()
     end
     Round = Round + 1
     print("----------------------------------------")

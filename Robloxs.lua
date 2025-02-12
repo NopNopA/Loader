@@ -5,7 +5,8 @@ repeat task.wait() until game.Players.LocalPlayer
 local HttpService = game:GetService("HttpService")
 local Request = (syn and syn.request) or request or (http and http.request) or http_request
 local username = game.Players.LocalPlayer.Name
-local globalFunc = false
+local HandleBlacklist = { [772] = true }
+local IsGetKick = false
 
 game.StarterGui:SetCore("SendNotification", {
     Title = 'API SERVICES',
@@ -15,21 +16,14 @@ game.StarterGui:SetCore("SendNotification", {
 })
 
 local function checkForError()
-    game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(v)
-        if v.Name == "ErrorPrompt" then
-            pcall(function()
-                repeat wait(0.5) until game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame:FindFirstChild("ErrorMessage")
-                
-                local errorMessage = game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage.Text
-                local errorCode = tonumber(errorMessage:split("\n")[2]:match("%d+"))
-
-                if errorCode then
-                    globalFunc = true
-                end
-            end)
+    game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+            if not HandleBlacklist[game:GetService("GuiService"):GetErrorCode().Value] then
+                IsGetKick = true
+            end
         end
     end)
-    return globalFunc
+    return IsGetKick
 end
 
 local function updateStatus()

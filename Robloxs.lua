@@ -1,5 +1,4 @@
 repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
 
 local HttpService = game:GetService("HttpService")
@@ -74,7 +73,6 @@ local function updateStatus()
 end
 
 local Round = 0
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Fix"))()
 while true do
     IsGetKick = checkForError()
     print("Disconnected : ", IsGetKick)

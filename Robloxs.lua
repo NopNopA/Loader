@@ -29,16 +29,7 @@ local function setOffline()
     local url = "http://103.216.158.53:1471/offline"
     local username = game.Players.LocalPlayer.Name
     local data = HttpService:JSONEncode({username = username})
-
-    local requestData = {
-        Url = url,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = data
-    }
-
+    local requestData = {Url = url,Method = "POST", Headers = {["Content-Type"] = "application/json"},Body = data}
     local success, response = pcall(function()
         Request(requestData)  
     end)
@@ -51,20 +42,10 @@ local function updateStatus()
     local url = "http://103.216.158.53:1471/"
     local username = game.Players.LocalPlayer.Name
     local data = "username=" .. username
-
-    local requestData = {
-        Url = url,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/x-www-form-urlencoded"
-        },
-        Body = data
-    }
-
+    local requestData = {Url = url,Method = "POST",Headers = {["Content-Type"] = "application/x-www-form-urlencoded"},Body = data}
     local success, response = pcall(function()
         return Request(requestData)
     end)
-
     if success and response.StatusCode == 200 then
         print("Status Updated API : " .. username)
     else
@@ -74,17 +55,22 @@ end
 
 local Round = 0
 while true do
-    IsGetKick = checkForError()
-    print("Disconnected : ", IsGetKick)
-    print("API runs at : ", Round)
-    if not IsGetKick then
-        updateStatus()
+    local success, err = pcall(function()
+        IsGetKick = checkForError()
+        print("Disconnected : ", IsGetKick)
+        print("API runs at : ", Round)
+        if not IsGetKick then
+            updateStatus()
+        end
+        if IsGetKick then
+            wait(35)
+            setOffline()
+        end
+        Round = Round + 1
+        print("----------------------------------------")
+        wait(10)
+    end)
+    if not success then
+        print("Error Caught: ", err) 
     end
-    if IsGetKick then
-        wait(35)
-        setOffline()
-    end
-    Round = Round + 1
-    print("----------------------------------------")
-    wait(15)
 end

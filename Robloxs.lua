@@ -1,11 +1,38 @@
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players.LocalPlayer
+if not game:IsLoaded() then
+    task.delay(60, function()
+        if NoShutdown then return end
+        if not game:IsLoaded() then
+            return game:Shutdown()
+        end
+        local Code = game:GetService'GuiService':GetErrorCode().Value
+        if Code >= Enum.ConnectionError.DisconnectErrors.Value then
+            return game:Shutdown()
+        end
+    end)
+    game.Loaded:Wait()
+end
 
-local HttpService = game:GetService("HttpService")
 local Request = (syn and syn.request) or request or (http and http.request) or http_request
 local username = game.Players.LocalPlayer.Name
-local HandleBlacklist = { [772] = true }
 local IsGetKick = false
+local TeleportService = game:GetService'TeleportService'
+local InputService = game:GetService'UserInputService'
+local HttpService = game:GetService'HttpService'
+local RunService = game:GetService'RunService'
+local GuiService = game:GetService'GuiService'
+local Players = game:GetService'Players'
+local LocalPlayer = Players.LocalPlayer if not LocalPlayer then repeat LocalPlayer = Players.LocalPlayer task.wait() until LocalPlayer end task.wait(0.5)
+local UGS = UserSettings():GetService'UserGameSettings'
+
+UGS.MasterVolume = 0
+LocalPlayer.OnTeleport:Connect(function(State)
+    if State == Enum.TeleportState.Started and Nexus.IsConnected then
+        IsGetKick = true
+    end
+end)
+
+RunService:Set3dRenderingEnabled(false)
+settings().Rendering.QualityLevel = 1
 
 game.StarterGui:SetCore("SendNotification", {
     Title = 'API SERVICES',
@@ -17,7 +44,7 @@ game.StarterGui:SetCore("SendNotification", {
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
         if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
-            if not HandleBlacklist[game:GetService("GuiService"):GetErrorCode().Value] then
+            if game:GetService("GuiService"):GetErrorCode().Value then
                 IsGetKick = true
             end
         end
@@ -68,7 +95,7 @@ while true do
         end
         Round = Round + 1
         print("----------------------------------------")
-        wait(10)
+        task.wait(10)
     end)
     if not success then
         print("Error Caught: ", err) 

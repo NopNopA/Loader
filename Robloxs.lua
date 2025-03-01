@@ -31,15 +31,24 @@ LocalPlayer.OnTeleport:Connect(function(State)
     end
 end)
 
-RunService:Set3dRenderingEnabled(false)
-settings().Rendering.QualityLevel = 1
-
 game.StarterGui:SetCore("SendNotification", {
     Title = 'API SERVICES',
     Text = 'User : ' .. username,
     Duration = 25,
     Icon = 'rbxassetid://18976336309'
 })
+
+InputService.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.O then 
+        RunService:Set3dRenderingEnabled(false)
+    end
+    if input.KeyCode == Enum.KeyCode.C then 
+        RunService:Set3dRenderingEnabled(true)
+    end
+end)
+
+RunService:Set3dRenderingEnabled(false)
+settings().Rendering.QualityLevel = 1
 
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
@@ -80,24 +89,27 @@ local function updateStatus()
     end
 end
 
-local Round = 0
-while true do
-    local success, err = pcall(function()
-        IsGetKick = checkForError()
-        print("Disconnected : ", IsGetKick)
-        print("API runs at : ", Round)
-        if not IsGetKick then
-            updateStatus()
+task.spawn(function()
+    local Round = 0
+    while true do
+        local success, err = pcall(function()
+            IsGetKick = checkForError()
+            print("Disconnected : ", IsGetKick)
+            print("API runs at : ", Round)
+
+            if not IsGetKick then
+                updateStatus()
+            else
+                task.wait(35)
+                setOffline()
+            end
+            
+            Round = Round + 1
+            print("----------------------------------------")
+            task.wait(10)
+        end)
+        if not success then
+            print("Error Caught: ", err) 
         end
-        if IsGetKick then
-            wait(35)
-            setOffline()
-        end
-        Round = Round + 1
-        print("----------------------------------------")
-        task.wait(10)
-    end)
-    if not success then
-        print("Error Caught: ", err) 
     end
-end
+end)

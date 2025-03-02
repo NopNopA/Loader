@@ -47,7 +47,6 @@ InputService.InputBegan:Connect(function(input)
     end
 end)
 
-RunService:Set3dRenderingEnabled(false)
 settings().Rendering.QualityLevel = 1
 
 local function checkForError()

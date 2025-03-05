@@ -49,6 +49,20 @@ end)
 
 settings().Rendering.QualityLevel = 1
 
+local function Get_port(username)
+    local url = "http://103.216.158.53:12345/getport?username=" .. username
+    local response = Request({Url = url,Method = "GET"})
+    if response and response.Body then
+        local success, data = pcall(function() return game:GetService("HttpService"):JSONDecode(response.Body) end)
+        if success and data.Port then
+            return data.Port
+        end
+    end
+    return nil
+end
+
+Port = Get_port(username)
+
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
         if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
@@ -61,7 +75,7 @@ local function checkForError()
 end
 
 local function setOffline()
-    local url = "http://103.216.158.53:1471/offline"
+    local url = "http://127.0.0.1:" .. Port .. "/offline"
     local username = game.Players.LocalPlayer.Name
     local data = HttpService:JSONEncode({username = username})
     local requestData = {Url = url,Method = "POST", Headers = {["Content-Type"] = "application/json"},Body = data}
@@ -74,14 +88,14 @@ local function setOffline()
 end
 
 local function updateStatus()
-    local url = "http://103.216.158.53:1471/"
+    local url = "http://127.0.0.1:" .. Port .. "/"
     local username = game.Players.LocalPlayer.Name
-    local data = "username=" .. username
-    local requestData = {Url = url,Method = "POST",Headers = {["Content-Type"] = "application/x-www-form-urlencoded"},Body = data}
+    local data = HttpService:JSONEncode({username = username})
+    local requestData = {Url = url,Method = "POST",Headers = {["Content-Type"] = "application/json"},Body = data}
     local success, response = pcall(function()
         return Request(requestData)
     end)
-    if success and response.StatusCode == 200 then
+    if success and response and response.StatusCode == 200 then
         print("Status Updated API : " .. username)
     else
         warn("Failed Update API " .. (response and response.StatusCode or "Request failed"))

@@ -61,7 +61,8 @@ local function Get_port(username)
     return nil
 end
 
-Port = Get_port(username)
+Port = Get_port(username) or 5000
+print(Port)
 
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)

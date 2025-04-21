@@ -51,19 +51,30 @@ settings().Rendering.QualityLevel = 1
 
 local function Get_port(username)
     local url = "http://103.216.158.53:12345/getport?username=" .. username
-    local response = Request({Url = url,Method = "GET"})
-    if response and response.Body then
+    local response = Request({Url = url, Method = "GET"})
+    if response and response.StatusCode == 200 and response.Body then
         local success, data = pcall(function() return game:GetService("HttpService"):JSONDecode(response.Body) end)
-        if success and data.Port then
-            return data.Port
+        if success and data.port then
+            return data.port
         end
+        warn("Failed to decode JSON or port not found in response")
+    else
+        warn("Request failed with status: " .. (response and response.StatusCode or "unknown"))
     end
     return nil
 end
 
 Port = Get_port(username) or 5000
 print(Port)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Check.lua"))()
+
+task.spawn(function()
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Check.lua"))()
+    end)
+    if not success then
+        warn("Error running script in background: " .. tostring(result))
+    end
+end)
 
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)

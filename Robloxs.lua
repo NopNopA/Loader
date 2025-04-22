@@ -117,13 +117,13 @@ task.spawn(function()
             if not IsGetKick then
                 updateStatus()
             else
-                task.wait(40)
+                task.wait(35)
                 setOffline()
             end
             
             Round = Round + 1
             print("----------------------------------------")
-            task.wait(35)
+            task.wait(30)
         end)
         if not success then
             print("Error Caught: ", err) 

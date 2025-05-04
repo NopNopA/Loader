@@ -123,7 +123,7 @@ task.spawn(function()
             
             Round = Round + 1
             print("----------------------------------------")
-            task.wait(20)
+            task.wait(30)
         end)
         if not success then
             print("Error Caught: ", err) 

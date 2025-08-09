@@ -39,19 +39,32 @@ game.StarterGui:SetCore("SendNotification", {
 })
 
 local UserInputService = game:GetService("UserInputService")
+
+-- ฟังก์ชันสุ่มชื่อ (ลดโอกาสโดนตรวจจับ)
+local function randomName(len)
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    local name = ""
+    for i = 1, len do
+        local rand = math.random(1, #chars)
+        name = name .. string.sub(chars, rand, rand)
+    end
+    return name
+end
+
 local gui = Instance.new("ScreenGui")
+gui.Name = randomName(10)
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
 gui.Parent = game:GetService("CoreGui")
 local frame = Instance.new("Frame")
+frame.Name = randomName(8)
 frame.Size = UDim2.new(1, 0, 1, 0)
 frame.Position = UDim2.new(0, 0, 0, 0)
 frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 frame.BorderSizePixel = 0
 frame.Parent = gui
 
-
-gui.Enabled = false
+gui.Enabled = true
 UserInputService.InputBegan:Connect(function(input, processed)
     if processed then return end
 

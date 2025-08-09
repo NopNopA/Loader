@@ -39,8 +39,6 @@ game.StarterGui:SetCore("SendNotification", {
 })
 
 local UserInputService = game:GetService("UserInputService")
-
--- ฟังก์ชันสุ่มชื่อ (ลดโอกาสโดนตรวจจับ)
 local function randomName(len)
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local name = ""

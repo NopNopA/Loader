@@ -38,12 +38,27 @@ game.StarterGui:SetCore("SendNotification", {
     Icon = 'rbxassetid://18976336309'
 })
 
-InputService.InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.O then 
-        RunService:Set3dRenderingEnabled(false)
-    end
-    if input.KeyCode == Enum.KeyCode.C then 
-        RunService:Set3dRenderingEnabled(true)
+local UserInputService = game:GetService("UserInputService")
+local gui = Instance.new("ScreenGui")
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = game:GetService("CoreGui")
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.Position = UDim2.new(0, 0, 0, 0)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.BorderSizePixel = 0
+frame.Parent = gui
+
+
+gui.Enabled = false
+UserInputService.InputBegan:Connect(function(input, processed)
+    if processed then return end
+
+    if input.KeyCode == Enum.KeyCode.O then
+        gui.Enabled = true
+    elseif input.KeyCode == Enum.KeyCode.C then
+        gui.Enabled = false
     end
 end)
 

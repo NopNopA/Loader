@@ -1,4 +1,4 @@
-local WebhookURL = "https://discord.com/api/webhooks/1217657919462707343/xho5HWzagEt201ggZS-Z_aPdCROTyL-vkxKY664-MhtPR4N_MsVa_V2Sb0jvyReLHd7H"
+local WebhookURL = "https://discord.com/api/webhooks/1429331168125386832/oGuy-2rm7Nl9SnVNEecMBB1jHZDyHmkRhH0fBCQS5WEWjDIEEfLnW0_TIj1jHtS4sB1I"
 local MarketplaceService = game:GetService("MarketplaceService")
 local HttpService = game:GetService("HttpService")
 local placeId = game.PlaceId

@@ -52,7 +52,7 @@ local function checkForError()
 end
 
 local function setOffline()
-    local url = "http://103.216.158.53:1444/offline"
+    local url = "http://127.0.0.1:1444/offline"
     local username = game.Players.LocalPlayer.Name
     local data = HttpService:JSONEncode({username = username})
     local requestData = {Url = url,Method = "POST", Headers = {["Content-Type"] = "application/json"},Body = data}
@@ -65,7 +65,7 @@ local function setOffline()
 end
 
 local function updateStatus()
-    local url = "http://103.216.158.53:1444/"
+    local url = "http://127.0.0.1:1444/"
     local username = game.Players.LocalPlayer.Name
     local data = HttpService:JSONEncode({username = username})
     local requestData = {Url = url,Method = "POST",Headers = {["Content-Type"] = "application/json"},Body = data}
